@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MLBB Top-Up | Diamond Reload Service</title>
+  <meta name="description" content="Fast, safe, and affordable Mobile Legends: Bang Bang diamond top-up. Choose your denomination, pay via e-wallet or bank transfer, and get diamonds instantly." />
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue:   '#3b82f6',
+              indigo: '#6366f1',
+              purple: '#8b5cf6',
+              gold:   '#f59e0b',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 4s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%':       { transform: 'translateY(-8px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #0f172a; }
+
+    /* Gradient text utility */
+    .text-gradient {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Hero carousel */
+    .carousel-track { transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); }
+
+    /* Glow effect on selected card */
+    .diamond-card.selected {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px #6366f1, 0 0 20px rgba(99,102,241,0.4);
+    }
+
+    /* Payment card selected */
+    .pay-card.selected {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 2px #f59e0b, 0 0 16px rgba(245,158,11,0.35);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1e293b; }
+    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+  </style>
+</head>
+<body class="text-slate-100 font-sans antialiased">
+
+  <!-- =========================================================
+       SECTION: NAVBAR
+  ========================================================== -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2 group">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 via-purple-600 to-amber-400 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <span class="text-lg font-extrabold text-gradient hidden sm:block">MLBB Top-Up</span>
+        </a>
+
+        <!-- Search -->
+        <div class="flex-1 max-w-xs mx-4 sm:mx-8">
+          <div class="relative">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input id="search-input" type="search" placeholder="Search products..."
+              class="w-full pl-9 pr-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors" />
+          </div>
+        </div>
+
+        <!-- Auth Buttons -->
+        <div class="flex items-center gap-2">
+          <button id="btn-login" class="hidden sm:inline-flex px-4 py-2 text-sm font-semibold rounded-lg border border-slate-600 hover:border-indigo-400 hover:text-indigo-400 transition-colors">
+            Login
+          </button>
+          <button id="btn-register" class="inline-flex px-4 py-2 text-sm font-bold rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 shadow-lg hover:shadow-indigo-500/30 transition-all active:scale-95">
+            Register
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-16">
+
+    <!-- =========================================================
+         SECTION: HERO / PROMO CAROUSEL
+    ========================================================== -->
+    <section id="hero" class="relative overflow-hidden">
+      <!-- Carousel wrapper -->
+      <div class="relative h-64 sm:h-80 lg:h-96 overflow-hidden" aria-label="Promo banners">
+        <div id="carousel-track" class="carousel-track flex h-full">
+
+          <!-- Slide 1 -->
+          <div class="carousel-slide min-w-full h-full relative bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center">
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 20% 50%, #6366f1 0%, transparent 60%), radial-gradient(circle at 80% 50%, #f59e0b 0%, transparent 60%);"></div>
+            <div class="relative text-center px-6">
+              <span class="inline-block mb-3 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold uppercase tracking-widest">🔥 Limited Offer</span>
+              <h1 class="text-3xl sm:text-5xl font-black text-gradient mb-2">Double Diamond</h1>
+              <p class="text-slate-300 text-sm sm:text-base">Get 2× diamonds on your first top-up this week</p>
+              <a href="#top-up-form" class="mt-5 inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 font-bold text-sm shadow-lg hover:scale-105 transition-transform">
+                Top-Up Now →
+              </a>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="carousel-slide min-w-full h-full relative bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 flex items-center justify-center">
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 30% 50%, #8b5cf6 0%, transparent 55%), radial-gradient(circle at 70% 50%, #3b82f6 0%, transparent 55%);"></div>
+            <div class="relative text-center px-6">
+              <span class="inline-block mb-3 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-400/40 text-purple-300 text-xs font-bold uppercase tracking-widest">💎 Season Pass</span>
+              <h2 class="text-3xl sm:text-5xl font-black text-white mb-2">Starlight Member</h2>
+              <p class="text-slate-300 text-sm sm:text-base">Exclusive skins, bonus diamonds & more with Starlight</p>
+              <a href="#top-up-form" class="mt-5 inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 font-bold text-sm shadow-lg hover:scale-105 transition-transform">
+                Get Starlight →
+              </a>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="carousel-slide min-w-full h-full relative bg-gradient-to-br from-slate-900 via-amber-950 to-slate-900 flex items-center justify-center">
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 50% 30%, #f59e0b 0%, transparent 60%), radial-gradient(circle at 50% 70%, #ef4444 0%, transparent 50%);"></div>
+            <div class="relative text-center px-6">
+              <span class="inline-block mb-3 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold uppercase tracking-widest">⚡ Flash Sale</span>
+              <h2 class="text-3xl sm:text-5xl font-black text-white mb-2">Mega Sale</h2>
+              <p class="text-slate-300 text-sm sm:text-base">Up to 30% off selected diamond packs — today only!</p>
+              <a href="#top-up-form" class="mt-5 inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 font-bold text-sm shadow-lg hover:scale-105 transition-transform">
+                Shop Sale →
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel controls -->
+        <button id="carousel-prev" aria-label="Previous slide"
+          class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-800/70 border border-slate-600 hover:bg-slate-700 flex items-center justify-center transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button id="carousel-next" aria-label="Next slide"
+          class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-800/70 border border-slate-600 hover:bg-slate-700 flex items-center justify-center transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+
+        <!-- Dots -->
+        <div id="carousel-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+          <button class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/80 transition-all" data-index="0" aria-label="Slide 1"></button>
+          <button class="carousel-dot w-2 h-2 rounded-full bg-white/30 mt-0.5 transition-all" data-index="1" aria-label="Slide 2"></button>
+          <button class="carousel-dot w-2 h-2 rounded-full bg-white/30 mt-0.5 transition-all" data-index="2" aria-label="Slide 3"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         SECTION: TOP-UP FORM
+    ========================================================== -->
+    <section id="top-up-form" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+
+      <!-- Step indicator -->
+      <div class="flex items-center justify-center gap-0">
+        <div class="step-item flex flex-col items-center">
+          <div id="step-dot-1" class="w-9 h-9 rounded-full bg-indigo-600 border-2 border-indigo-400 flex items-center justify-center font-bold text-sm shadow-lg shadow-indigo-500/30">1</div>
+          <span class="text-xs text-indigo-300 mt-1 font-semibold">Account</span>
+        </div>
+        <div class="h-0.5 w-16 sm:w-24 bg-slate-700 mx-1 mb-4"></div>
+        <div class="step-item flex flex-col items-center">
+          <div id="step-dot-2" class="w-9 h-9 rounded-full bg-slate-700 border-2 border-slate-600 flex items-center justify-center font-bold text-sm text-slate-400">2</div>
+          <span class="text-xs text-slate-500 mt-1 font-semibold">Product</span>
+        </div>
+        <div class="h-0.5 w-16 sm:w-24 bg-slate-700 mx-1 mb-4"></div>
+        <div class="step-item flex flex-col items-center">
+          <div id="step-dot-3" class="w-9 h-9 rounded-full bg-slate-700 border-2 border-slate-600 flex items-center justify-center font-bold text-sm text-slate-400">3</div>
+          <span class="text-xs text-slate-500 mt-1 font-semibold">Payment</span>
+        </div>
+      </div>
+
+      <!-- =====================================================
+           FORM SECTION 1: User ID & Zone ID
+      ====================================================== -->
+      <div id="section-account" class="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 sm:p-8 backdrop-blur-sm">
+        <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-sm font-black">1</span>
+          Enter Your Account
+        </h2>
+        <p class="text-slate-400 text-sm mb-6">Your User ID and Zone ID can be found in-game under your profile.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- User ID -->
+          <div>
+            <label for="user-id" class="block text-sm font-semibold text-slate-300 mb-1.5">User ID <span class="text-red-400">*</span></label>
+            <input id="user-id" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 123456789"
+              class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-600 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40 transition-colors placeholder-slate-600" />
+          </div>
+          <!-- Zone ID -->
+          <div>
+            <label for="zone-id" class="block text-sm font-semibold text-slate-300 mb-1.5">Zone ID <span class="text-red-400">*</span></label>
+            <div class="relative">
+              <input id="zone-id" type="text" inputmode="numeric" placeholder="e.g. 1234"
+                class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-600 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40 transition-colors placeholder-slate-600" />
+              <!-- Tooltip trigger -->
+              <button id="zone-tooltip-btn" type="button" aria-label="Where to find Zone ID"
+                class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-600 hover:bg-indigo-600 flex items-center justify-center text-xs font-bold transition-colors">?</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tooltip / helper panel -->
+        <div id="zone-tooltip" class="hidden mt-4 p-4 rounded-xl border border-indigo-500/40 bg-indigo-950/50 text-sm text-slate-300">
+          <p class="font-semibold text-indigo-300 mb-1">🔍 How to find your Zone ID</p>
+          <ol class="list-decimal list-inside space-y-1 text-slate-400">
+            <li>Open Mobile Legends on your device.</li>
+            <li>Tap your avatar in the top-left corner.</li>
+            <li>Your <span class="text-white font-semibold">User ID</span> and <span class="text-white font-semibold">Zone ID (Server)</span> appear below your nickname.</li>
+          </ol>
+        </div>
+
+        <!-- Verify -->
+        <button id="btn-verify" type="button"
+          class="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 font-bold text-sm hover:from-blue-500 hover:to-indigo-500 hover:shadow-lg hover:shadow-indigo-500/30 transition-all active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          Verify Account
+        </button>
+
+        <!-- Verified banner (hidden by default) -->
+        <div id="verified-banner" class="hidden mt-4 flex items-center gap-3 p-3 rounded-xl bg-emerald-900/40 border border-emerald-500/40 text-emerald-300 text-sm">
+          <svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span>Account verified: <strong class="text-white" id="verified-name">Shadow Knight</strong> ✓</span>
+        </div>
+      </div>
+
+      <!-- =====================================================
+           FORM SECTION 2: Product Grid (Diamond denominations)
+      ====================================================== -->
+      <div id="section-product" class="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 sm:p-8 backdrop-blur-sm">
+        <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-purple-600 flex items-center justify-center text-sm font-black">2</span>
+          Select Diamond Pack
+        </h2>
+        <p class="text-slate-400 text-sm mb-6">Tap a pack to select it. Prices are in IDR (Indonesian Rupiah).</p>
+
+        <!-- Product grid -->
+        <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+
+          <!-- Template: diamond card -->
+          <!-- [diamond] [label] [price] -->
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="11" data-price="3000">
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">11</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 3.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="22" data-price="6000">
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">22</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 6.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="56" data-price="14000">
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">56</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 14.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="112" data-price="28000">
+            <div class="absolute top-2 right-2">
+              <span class="px-1.5 py-0.5 rounded-md bg-blue-600 text-white text-[10px] font-bold">HOT</span>
+            </div>
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">112</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 28.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="172" data-price="42000">
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">172</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 42.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="257" data-price="62000">
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">257</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 62.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="514" data-price="122000">
+            <div class="absolute top-2 right-2">
+              <span class="px-1.5 py-0.5 rounded-md bg-purple-600 text-white text-[10px] font-bold">BEST</span>
+            </div>
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">514</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 122.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="1024" data-price="240000">
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">1.024</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 240.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="2048" data-price="470000">
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">2.048</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 470.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="3099" data-price="700000">
+            <div class="absolute top-2 left-2">
+              <span class="px-1.5 py-0.5 rounded-md bg-amber-500 text-slate-900 text-[10px] font-bold">PROMO</span>
+            </div>
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">3.099</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 700.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="4196" data-price="950000">
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">4.196</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 950.000</p>
+          </div>
+
+          <div class="diamond-card aspect-square relative flex flex-col items-center justify-center rounded-xl bg-slate-900 border border-slate-700 p-3 cursor-pointer hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/10 transition-all select-none" data-amount="5532" data-price="1300000">
+            <div class="absolute top-2 right-2">
+              <span class="px-1.5 py-0.5 rounded-md bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 text-[10px] font-bold">VIP</span>
+            </div>
+            <span class="text-3xl">💎</span>
+            <p class="mt-2 text-base font-extrabold">5.532</p>
+            <p class="text-xs text-slate-400 mt-0.5">Diamonds</p>
+            <p class="mt-2 text-xs font-semibold text-amber-400">Rp 1.300.000</p>
+          </div>
+        </div>
+
+        <!-- Selected summary -->
+        <div id="selected-product" class="hidden mt-5 p-4 rounded-xl bg-purple-950/50 border border-purple-500/40 flex items-center justify-between">
+          <div>
+            <p class="text-xs text-purple-300 font-semibold uppercase tracking-wider">Selected Pack</p>
+            <p class="text-lg font-black text-white mt-0.5">💎 <span id="selected-diamonds">--</span> Diamonds</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-slate-400">Price</p>
+            <p class="text-lg font-black text-amber-400">Rp <span id="selected-price">--</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+           FORM SECTION 3: Payment Methods
+      ====================================================== -->
+      <div id="section-payment" class="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 sm:p-8 backdrop-blur-sm">
+        <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-amber-600 flex items-center justify-center text-sm font-black">3</span>
+          Payment Method
+        </h2>
+        <p class="text-slate-400 text-sm mb-6">Choose your preferred payment option.</p>
+
+        <!-- E-Wallets -->
+        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">E-Wallet</h3>
+        <div id="payment-grid-ewallet" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="GoPay">
+            <div class="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center font-black text-white text-xs shrink-0">GP</div>
+            <span class="font-semibold text-sm">GoPay</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="OVO">
+            <div class="w-10 h-10 rounded-lg bg-purple-600 flex items-center justify-center font-black text-white text-xs shrink-0">OVO</div>
+            <span class="font-semibold text-sm">OVO</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="DANA">
+            <div class="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center font-black text-white text-xs shrink-0">DAN</div>
+            <span class="font-semibold text-sm">DANA</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="ShopeePay">
+            <div class="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center font-black text-white text-xs shrink-0">SP</div>
+            <span class="font-semibold text-sm">ShopeePay</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="LinkAja">
+            <div class="w-10 h-10 rounded-lg bg-red-600 flex items-center justify-center font-black text-white text-xs shrink-0">LA</div>
+            <span class="font-semibold text-sm">LinkAja</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="Qris">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-blue-600 flex items-center justify-center font-black text-white text-xs shrink-0">QR</div>
+            <span class="font-semibold text-sm">QRIS</span>
+          </div>
+        </div>
+
+        <!-- Bank Transfer -->
+        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Bank Transfer</h3>
+        <div id="payment-grid-bank" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="BCA">
+            <div class="w-10 h-10 rounded-lg bg-blue-700 flex items-center justify-center font-black text-white text-xs shrink-0">BCA</div>
+            <span class="font-semibold text-sm">BCA</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="BRI">
+            <div class="w-10 h-10 rounded-lg bg-sky-700 flex items-center justify-center font-black text-white text-xs shrink-0">BRI</div>
+            <span class="font-semibold text-sm">BRI</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="Mandiri">
+            <div class="w-10 h-10 rounded-lg bg-yellow-600 flex items-center justify-center font-black text-white text-xs shrink-0">MDR</div>
+            <span class="font-semibold text-sm">Mandiri</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="BNI">
+            <div class="w-10 h-10 rounded-lg bg-orange-700 flex items-center justify-center font-black text-white text-xs shrink-0">BNI</div>
+            <span class="font-semibold text-sm">BNI</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="Permata">
+            <div class="w-10 h-10 rounded-lg bg-rose-700 flex items-center justify-center font-black text-white text-xs shrink-0">PRM</div>
+            <span class="font-semibold text-sm">Permata</span>
+          </div>
+
+          <div class="pay-card flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-700 cursor-pointer hover:border-amber-500/50 transition-all select-none" data-method="BSI">
+            <div class="w-10 h-10 rounded-lg bg-teal-700 flex items-center justify-center font-black text-white text-xs shrink-0">BSI</div>
+            <span class="font-semibold text-sm">BSI</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom padding for floating button -->
+      <div class="h-20"></div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       ACTION: FIXED FLOATING "BUY NOW" FOOTER
+  ========================================================== -->
+  <div id="buy-bar" class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-t border-slate-700/60 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center gap-4">
+      <!-- Order summary -->
+      <div class="flex-1 min-w-0">
+        <p class="text-xs text-slate-400 truncate">
+          <span id="bar-product">No product selected</span>
+          <span id="bar-method-sep" class="hidden"> · </span>
+          <span id="bar-method" class="text-slate-300"></span>
+        </p>
+        <p class="text-base font-black text-amber-400 mt-0.5">
+          Rp <span id="bar-price">0</span>
+        </p>
+      </div>
+      <!-- Buy Now button -->
+      <button id="btn-buy-now"
+        class="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-black text-sm bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 shadow-lg shadow-amber-500/30 hover:from-amber-400 hover:to-orange-400 hover:scale-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100"
+        disabled>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        Buy Now
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL: Order Confirmation
+  ========================================================== -->
+  <div id="modal-confirm" class="hidden fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="modal-backdrop"></div>
+    <div class="relative w-full max-w-md bg-slate-800 border border-slate-600 rounded-2xl shadow-2xl p-6 sm:p-8 animate-float">
+      <!-- Close -->
+      <button id="modal-close" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition-colors" aria-label="Close">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <h3 class="text-lg font-black mb-4">Order Confirmation</h3>
+
+      <dl class="space-y-3 text-sm">
+        <div class="flex justify-between">
+          <dt class="text-slate-400">Player</dt>
+          <dd class="font-semibold text-white" id="modal-player">–</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-slate-400">Product</dt>
+          <dd class="font-semibold text-white" id="modal-product">–</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-slate-400">Payment</dt>
+          <dd class="font-semibold text-white" id="modal-payment">–</dd>
+        </div>
+        <div class="pt-3 border-t border-slate-700 flex justify-between">
+          <dt class="font-bold">Total</dt>
+          <dd class="font-black text-amber-400 text-base" id="modal-total">–</dd>
+        </div>
+      </dl>
+
+      <button id="modal-confirm-btn"
+        class="mt-6 w-full py-3 rounded-xl font-black bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 hover:from-amber-400 hover:to-orange-400 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-amber-500/30">
+        Confirm & Pay
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       FOOTER
+  ========================================================== -->
+  <footer class="pb-24 bg-slate-900 border-t border-slate-800 text-center py-8">
+    <p class="text-slate-500 text-xs">© 2025 MLBB Top-Up · Not affiliated with Moonton · Prices may vary</p>
+    <div class="flex justify-center gap-6 mt-3">
+      <a href="#" class="text-slate-500 hover:text-slate-300 text-xs transition-colors">Privacy</a>
+      <a href="#" class="text-slate-500 hover:text-slate-300 text-xs transition-colors">Terms</a>
+      <a href="#" class="text-slate-500 hover:text-slate-300 text-xs transition-colors">Contact</a>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       JAVASCRIPT: Interactivity
+  ========================================================== -->
+  <script>
+    /* ---- CAROUSEL ---- */
+    const track = document.getElementById('carousel-track');
+    const dots  = document.querySelectorAll('.carousel-dot');
+    let current = 0;
+    const total  = 3;
+    let autoInterval;
+
+    function goTo(idx) {
+      current = (idx + total) % total;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((d, i) => {
+        d.classList.toggle('w-2.5', i === current);
+        d.classList.toggle('h-2.5', i === current);
+        d.classList.toggle('bg-white/80', i === current);
+        d.classList.toggle('w-2', i !== current);
+        d.classList.toggle('h-2', i !== current);
+        d.classList.toggle('bg-white/30', i !== current);
+        d.classList.toggle('mt-0.5', i !== current);
+      });
+    }
+
+    function resetAuto() {
+      clearInterval(autoInterval);
+      autoInterval = setInterval(() => goTo(current + 1), 4500);
+    }
+
+    document.getElementById('carousel-prev').addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+    document.getElementById('carousel-next').addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+    dots.forEach(d => d.addEventListener('click', () => { goTo(+d.dataset.index); resetAuto(); }));
+    resetAuto();
+
+    /* ---- ZONE ID TOOLTIP ---- */
+    const tooltipBtn  = document.getElementById('zone-tooltip-btn');
+    const tooltipPanel = document.getElementById('zone-tooltip');
+    tooltipBtn.addEventListener('click', () => tooltipPanel.classList.toggle('hidden'));
+
+    /* ---- VERIFY ACCOUNT ---- */
+    document.getElementById('btn-verify').addEventListener('click', function () {
+      const uid = document.getElementById('user-id').value.trim();
+      const zid = document.getElementById('zone-id').value.trim();
+      if (!uid || !zid) { alert('Please enter both User ID and Zone ID.'); return; }
+      // Simulate async verify
+      this.textContent = '⏳ Verifying…';
+      this.disabled = true;
+      setTimeout(() => {
+        document.getElementById('verified-banner').classList.remove('hidden');
+        document.getElementById('verified-banner').classList.add('flex');
+        this.innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Verified';
+        this.disabled = false;
+        updateStepDot(1, true);
+      }, 1200);
+    });
+
+    /* ---- DIAMOND CARDS ---- */
+    let selectedCard = null;
+
+    document.querySelectorAll('.diamond-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.diamond-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedCard = card;
+
+        const amt   = card.dataset.amount;
+        const price = card.dataset.price;
+        document.getElementById('selected-product').classList.remove('hidden');
+        document.getElementById('selected-diamonds').textContent = Number(amt).toLocaleString('id-ID');
+        document.getElementById('selected-price').textContent    = Number(price).toLocaleString('id-ID');
+
+        // Update bar
+        document.getElementById('bar-product').textContent = `💎 ${Number(amt).toLocaleString('id-ID')} Diamonds`;
+        document.getElementById('bar-price').textContent   = Number(price).toLocaleString('id-ID');
+
+        updateStepDot(2, true);
+        updateBuyButton();
+      });
+    });
+
+    /* ---- PAYMENT CARDS ---- */
+    let selectedPayment = null;
+
+    document.querySelectorAll('.pay-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedPayment = card.dataset.method;
+
+        document.getElementById('bar-method-sep').classList.remove('hidden');
+        document.getElementById('bar-method').textContent = selectedPayment;
+
+        updateStepDot(3, true);
+        updateBuyButton();
+      });
+    });
+
+    /* ---- STEP DOTS ---- */
+    function updateStepDot(step, done) {
+      const dot = document.getElementById(`step-dot-${step}`);
+      if (done) {
+        dot.classList.remove('bg-slate-700', 'border-slate-600', 'text-slate-400');
+        if (step === 2) dot.classList.add('bg-purple-600', 'border-purple-400');
+        if (step === 3) dot.classList.add('bg-amber-600', 'border-amber-400');
+        dot.parentElement.querySelector('span').classList.remove('text-slate-500');
+        if (step === 2) dot.parentElement.querySelector('span').classList.add('text-purple-300');
+        if (step === 3) dot.parentElement.querySelector('span').classList.add('text-amber-300');
+      }
+    }
+
+    /* ---- BUY BUTTON STATE ---- */
+    function updateBuyButton() {
+      const btn = document.getElementById('btn-buy-now');
+      btn.disabled = !(selectedCard && selectedPayment);
+    }
+
+    /* ---- BUY NOW → MODAL ---- */
+    document.getElementById('btn-buy-now').addEventListener('click', () => {
+      if (!selectedCard || !selectedPayment) return;
+      const uid = document.getElementById('user-id').value.trim() || 'Unknown';
+      document.getElementById('modal-player').textContent  = `UID: ${uid}`;
+      document.getElementById('modal-product').textContent = `💎 ${Number(selectedCard.dataset.amount).toLocaleString('id-ID')} Diamonds`;
+      document.getElementById('modal-payment').textContent = selectedPayment;
+      document.getElementById('modal-total').textContent   = `Rp ${Number(selectedCard.dataset.price).toLocaleString('id-ID')}`;
+      document.getElementById('modal-confirm').classList.remove('hidden');
+    });
+
+    function closeModal() { document.getElementById('modal-confirm').classList.add('hidden'); }
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+    document.getElementById('modal-confirm-btn').addEventListener('click', () => {
+      closeModal();
+      // Success toast
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-20 right-4 z-[70] flex items-center gap-3 px-5 py-3 rounded-xl bg-emerald-700 border border-emerald-500 text-white font-semibold text-sm shadow-xl';
+      toast.innerHTML = '✅ Order placed! Your diamonds will arrive shortly.';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    });
+  </script>
+</body>
+</html>
