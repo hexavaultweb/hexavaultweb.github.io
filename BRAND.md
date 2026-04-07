@@ -72,11 +72,8 @@ radial-gradient(circle, #f59e0b 0%, transparent 60%);
 ### 3.1 Font Stack
 
 ```css
-font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-             "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+font-family: 'Inter', sans-serif;
 ```
-
-> Tailwind's default `font-sans` stack is used throughout. No external font import is required for the prototype, but **Inter** or **Plus Jakarta Sans** are recommended for production.
 
 ### 3.2 Type Scale
 
