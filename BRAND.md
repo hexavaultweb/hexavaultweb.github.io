@@ -1,8 +1,8 @@
-# MLBB Top-Up — Brand Guidelines
+# Hexavault — Brand Guidelines
 
 > **Version:** 1.0 · **Last Updated:** 2025 · **Maintainer:** UI Team
 
-This document defines the visual identity, tone, and component standards for the **MLBB Top-Up** web service. All contributors must follow these guidelines to ensure a consistent and premium user experience.
+This document defines the visual identity, tone, and component standards for the **Hexavault** web service. All contributors must follow these guidelines to ensure a consistent and premium user experience.
 
 ---
 
