@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HexaVault Diamond — Top Up Mobile Legends Tercepat & Termurah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/topup.css">
+<!-- Real QR renderer (MIT licensed, industry-standard) — powers the scannable QRIS code -->
+<!-- QR renderer — dibundel LOKAL dari npm package "qrcode" v1.5.3 (MIT), bukan dari CDN,
+     supaya tidak gagal karena masalah jaringan/ekstensi browser/path CDN yang tidak konsisten. -->
+<script src="js/vendor/qrcode.min.js"></script>
+</head>
+<body>
+<div class="hex-field"></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- Navbar injected here by js/nav.js — identical markup/behaviour on both pages -->
+<div id="navbar-root"></div>
+
+<!-- ============ HOME ============ -->
+<section class="page active" id="page-home">
+  <div class="wrap hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot-live"></span> Server Diamond Online • Proses Rata-rata 8 Detik</div>
+        <h1>Isi Ulang <span class="g">Diamond Mobile Legends</span> Aman, Instan, Menguntungkan.</h1>
+        <p>HexaVault Diamond bukan cuma tempat top up — tiap transaksi kamu ditabung jadi poin, stempel, dan level membership yang bisa ditukar diamond gratis.</p>
+        <div class="hero-cta">
+          <button class="btn btn-grad" onclick="navigateSection('topup')">⚡ Top Up Sekarang</button>
+          <button class="btn btn-ghost" onclick="navigateSection('membership')">Lihat Keuntungan Member</button>
+        </div>
+        <div class="hero-stats">
+          <div><b>2.4jt+</b><span>Transaksi sukses</span></div>
+          <div><b>99.8%</b><span>Tingkat keberhasilan</span></div>
+          <div><b>24/7</b><span>Live Chat Support</span></div>
+        </div>
+      </div>
+      <div class="vault">
+        <div class="vault-ring r1"></div>
+        <div class="vault-ring r2"></div>
+        <div class="vault-ring r3"></div>
+        <div class="vault-core">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 L20 8 L17 21 L7 21 L4 8 Z" fill="#f5c451" stroke="#fff8e0" stroke-width=".5"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap" style="margin-top:10px;">
+    <div class="section-title"><h2>Kenapa HexaVault?</h2><p>Dirancang untuk gamer yang top up rutin</p></div>
+    <div class="feature-grid">
+      <div class="card card-pad feature-card"><div class="ftitle">💎 Poin Setiap Transaksi</div><p>Setiap Rp1.000 belanja = 1 Poin, bisa ditukar diamond kapan saja.</p></div>
+      <div class="card card-pad feature-card"><div class="ftitle">🏷️ Kartu Stempel</div><p>Kumpulkan 10 stempel dari 10x transaksi, dapatkan diamond gratis.</p></div>
+      <div class="card card-pad feature-card"><div class="ftitle">🔐 QRIS Nominal Pas</div><p>QR memuat nominal transaksi asli — mengikuti standar EMVCo/QRIS.</p></div>
+      <div class="card card-pad feature-card"><div class="ftitle">🚀 Level Membership</div><p>Naik level dari Bronze ke Platinum, diskon &amp; cashback makin besar.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOP UP ============ -->
+<section class="page" id="page-topup">
+  <div class="wrap">
+    <div class="section-title"><h2>Top Up Diamond Mobile Legends</h2><p>Isi data, pilih paket, bayar</p></div>
+
+    <div class="steps">
+      <div class="step now" id="stepline-1"><b><span class="num">1</span> Akun</b><span>ID & Zone</span></div>
+      <div class="step" id="stepline-2"><b><span class="num">2</span> Paket</b><span>Pilih diamond</span></div>
+      <div class="step" id="stepline-3"><b><span class="num">3</span> Pembayaran</b><span>Metode bayar</span></div>
+      <div class="step" id="stepline-4"><b><span class="num">4</span> Konfirmasi</b><span>Selesaikan</span></div>
+    </div>
+
+    <div class="summary">
+      <div>
+        <div class="card card-pad">
+          <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px;">LANGKAH 1 — DATA AKUN</label>
+          <div class="id-form" style="margin-top:12px;">
+            <div class="field"><label>User ID</label><input type="text" id="mlUserId" placeholder="Contoh: 123456789" oninput="checkNick()"></div>
+            <div class="field"><label>Zone ID</label><input type="text" id="mlZoneId" placeholder="Contoh: 8888" oninput="checkNick()"></div>
+            <button class="btn btn-ghost" onclick="checkNick()">Cek Nickname</button>
+          </div>
+          <div class="nick-preview" id="nickPreview">✅ Nickname ditemukan: <b id="nickResult" style="color:var(--green2)"></b></div>
+        </div>
+
+        <div class="card card-pad" style="margin-top:16px;">
+          <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px;">LANGKAH 2 — PILIH PAKET DIAMOND</label>
+          <div class="pkg-grid" id="pkgGrid"></div>
+        </div>
+
+        <div class="card card-pad" style="margin-top:16px;">
+          <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px;">LANGKAH 3 — METODE PEMBAYARAN</label>
+          <div class="paytabs" id="payTabs"></div>
+          <div class="paymethods" id="payMethods"></div>
+        </div>
+      </div>
+
+      <div class="sum-card card card-pad">
+        <b style="font-family:var(--display); font-size:16px;">Pesanan Kamu</b>
+        <p style="font-size:12px; color:var(--muted-2); margin-top:4px;">Ringkasan lengkap &amp; poin akan muncul setelah pembayaran selesai.</p>
+        <div class="sum-row" style="margin-top:10px;"><span>Paket dipilih</span><b id="sumPkg">—</b></div>
+        <div id="sumTierBadge"></div>
+        <div class="sum-total"><span style="font-family:var(--display); font-size:14px; color:var(--muted);">TOTAL BAYAR</span><b id="sumTotal" class="counting">Rp 0</b></div>
+        <button class="btn btn-grad btn-block" style="margin-top:16px;" id="payBtn" onclick="startPayment()" disabled>Bayar Sekarang</button>
+        <p class="hint">Transaksi diproses otomatis &amp; tercatat di Riwayat</p>
+      </div>
+      <!-- Hidden fields kept in DOM so existing summary logic still has a target; not shown to user during selection -->
+      <div style="display:none;"><span id="sumAcc"></span><span id="sumPay"></span><span id="sumPoin"></span><span id="sumStamp"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBERSHIP ============ -->
+<section class="page" id="page-membership">
+  <div class="wrap">
+    <div class="section-title"><h2>Membership HexaVault</h2><p>Makin sering top up, makin besar untungnya</p></div>
+
+    <div class="progress-wrap">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div>
+          <span class="tagline" style="border:1px solid var(--gold); color:var(--gold); font-size:10px; font-family:var(--mono); padding:2px 8px; border-radius:20px;">TIER SAAT INI</span>
+          <div style="font-family:var(--display); font-size:22px; font-weight:700;" id="curTierName">Bronze</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:12px; color:var(--muted);">Total Poin Terkumpul</div>
+          <div style="font-family:var(--mono); font-size:20px; color:var(--gold);" id="curPoints">0</div>
+        </div>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="tierProgressFill" style="width:0%"></div></div>
+      <div style="font-size:12px; color:var(--muted-2);" id="tierProgressText">Kumpulkan poin untuk naik ke tier berikutnya</div>
+      <div class="active-benefit-box" id="activeBenefitBox"></div>
+    </div>
+
+    <div class="card card-pad" style="margin-bottom:24px;">
+      <b style="font-family:var(--display); font-size:16px;">🏷️ Kartu Stempel — Diamond Gratis Tiap 10x Transaksi</b>
+      <p style="color:var(--muted); font-size:13px; margin-top:6px;">Setiap transaksi sukses = 1 stempel. Genap 10 stempel, dapat bonus 55 Diamond gratis otomatis, lalu kartu direset.</p>
+      <div class="stamp-grid" id="stampGrid"></div>
+    </div>
+
+    <div class="tier-grid">
+      <div class="tier tag-bronze"><span class="tagline">0 - 499 Poin</span><h3>🥉 Bronze</h3><div class="req">Level pemula</div>
+        <ul><li>Cashback poin standar 1x</li><li>Akses semua metode pembayaran</li><li>Kartu stempel aktif</li></ul></div>
+      <div class="tier tag-silver"><span class="tagline">500 - 1.499 Poin</span><h3>🥈 Silver</h3><div class="req">Top up rutin</div>
+        <ul><li>Cashback poin 1.2x</li><li>Diskon 1% semua paket</li><li>Prioritas proses transaksi</li></ul></div>
+      <div class="tier tag-gold"><span class="tagline">1.500 - 4.999 Poin</span><h3>🥇 Gold</h3><div class="req">Gamer aktif</div>
+        <ul><li>Cashback poin 1.5x</li><li>Diskon 3% semua paket</li><li>Bonus stempel 2x lebih cepat</li></ul></div>
+      <div class="tier tag-plat"><span class="tagline">5.000+ Poin</span><h3>💎 Platinum</h3><div class="req">Top spender</div>
+        <ul><li>Cashback poin 2x</li><li>Diskon 5% semua paket</li><li>Free diamond bulanan eksklusif</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REDEEM ============ -->
+<section class="page" id="page-redeem">
+  <div class="wrap">
+    <div class="section-title"><h2>Tukar Poin dengan Diamond</h2><p>Poin kamu: <b id="redeemPointsShow" style="color:var(--gold);">0</b></p></div>
+    <div class="redeem-grid" id="redeemGrid"></div>
+  </div>
+</section>
+
+<!-- ============ HISTORY ============ -->
+<section class="page" id="page-history">
+  <div class="wrap">
+    <div class="section-title"><h2>Riwayat Transaksi</h2><p>Semua transaksi tersimpan pada sesi ini</p></div>
+    <div class="card card-pad">
+      <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>ID Transaksi</th><th>Tanggal</th><th>Item</th><th>Nominal</th><th>Metode</th><th>Status</th></tr></thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+      </div>
+      <div class="empty-state" id="historyEmpty">Belum ada transaksi. Yuk top up pertamamu!</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footgrid">
+    <div>
+      <div class="brand-text" style="font-size:16px;">Hexa<span>Vault</span> Diamond</div>
+      <div style="margin-top:6px;">© 2026 HexaVault Diamond. Proyek Tugas Akhir — simulasi platform top up game.</div>
+    </div>
+    <div class="footlogos">
+      <span>QRIS</span><span>GoPay</span><span>OVO</span><span>DANA</span><span>ShopeePay</span><span>BCA</span><span>Mandiri</span><span>BNI</span><span>BRI</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ AUTH MODAL ============ -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <div class="modal-head"><h3>Masuk ke HexaVault</h3><button class="modal-close" onclick="closeModal('authOverlay')">✕</button></div>
+    <div class="modal-body">
+      <div class="tabs-auth">
+        <button class="active" id="tabLogin" onclick="switchAuth('login')">Masuk</button>
+        <button id="tabRegister" onclick="switchAuth('register')">Daftar</button>
+      </div>
+      <div id="loginForm">
+        <div class="formgroup"><label>Email</label><input type="email" id="loginEmail" placeholder="kamu@email.com"></div>
+        <div class="formgroup"><label>Kata Sandi</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+        <button class="btn btn-grad btn-block" onclick="doLogin()">Masuk</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="quickDemo()">Coba Demo Instan</button>
+      </div>
+      <div id="registerForm" style="display:none;">
+        <div class="formgroup"><label>Nama</label><input type="text" id="regName" placeholder="Nama kamu"></div>
+        <div class="formgroup"><label>Email</label><input type="email" id="regEmail" placeholder="kamu@email.com"></div>
+        <div class="formgroup"><label>Kata Sandi</label><input type="password" id="regPass" placeholder="Buat kata sandi"></div>
+        <button class="btn btn-grad btn-block" onclick="doRegister()">Daftar & Masuk</button>
+      </div>
+      <p class="hint">Data akun disimpan sementara pada sesi browser ini (mode demo).</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAYMENT MODAL ============ -->
+<div class="overlay" id="payOverlay">
+  <div class="modal">
+    <div class="modal-head"><h3 id="payModalTitle">Pembayaran</h3><button class="modal-close" onclick="cancelPayment()">✕</button></div>
+    <div class="modal-body" id="payModalBody"></div>
+  </div>
+</div>
+
+<!-- ============ RESULT MODAL ============ -->
+<div class="overlay" id="resultOverlay">
+  <div class="modal">
+    <div class="modal-body" id="resultModalBody" style="text-align:center; padding-top:32px;"></div>
+  </div>
+</div>
+
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/topup.js"></script>
+</body>
+</html>

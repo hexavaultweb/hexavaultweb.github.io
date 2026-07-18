@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joki Rank Mobile Legends — HexaVault Diamond</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/joki.css">
+<!-- Real QR renderer (MIT licensed, industry-standard) — powers the scannable QRIS code -->
+<!-- QR renderer — dibundel LOKAL dari npm package "qrcode" v1.5.3 (MIT), bukan dari CDN,
+     supaya tidak gagal karena masalah jaringan/ekstensi browser/path CDN yang tidak konsisten. -->
+<script src="js/vendor/qrcode.min.js"></script>
+</head>
+<body>
+<div class="hex-field"></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- Navbar injected here by js/nav.js — SAME markup/behaviour as index.html -->
+<div id="navbar-root"></div>
+
+<div class="wrap hero">
+  <div class="eyebrow"><span class="dot-live"></span> 148 Booster Online • Rata-rata Mulai 15 Menit</div>
+  <h1>Joki Rank <span class="g">Mobile Legends</span> — Aman, Cepat, Tanpa Report.</h1>
+  <p>Beli paket bintang sesuai rank kamu sekarang — mirip beli diamond, tinggal pilih jumlah bintang yang mau didapat. Dikerjakan booster berpengalaman dengan mode Play Safe. Sistem pembayaran sama seperti top up diamond — QRIS, e-wallet, dan transfer bank.</p>
+  <div class="trust-row">
+    <div class="trust">🛡️ Akun Terenkripsi</div>
+    <div class="trust">🚫 Anti Report / Play Safe</div>
+    <div class="trust">📊 Progress Real-time</div>
+    <div class="trust">💰 Garansi Uang Kembali</div>
+  </div>
+</div>
+
+<div class="wrap" style="padding-bottom:70px;">
+  <div class="section-title"><h2>Pesan Jasa Joki Rank</h2><p>Pilih rank &amp; paket bintang, lalu bayar</p></div>
+
+  <div class="steps">
+    <div class="step now" id="sl1"><b><span class="num">1</span> Paket</b><span>Rank &amp; Bintang</span></div>
+    <div class="step" id="sl2"><b><span class="num">2</span> Layanan</b><span>Mode &amp; tambahan</span></div>
+    <div class="step" id="sl3"><b><span class="num">3</span> Akun</b><span>Data game</span></div>
+    <div class="step" id="sl4"><b><span class="num">4</span> Pembayaran</b><span>Selesaikan</span></div>
+  </div>
+
+  <div class="summary">
+    <div>
+      <!-- RANK + STAR SELECTION -->
+      <div class="card card-pad">
+        <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px;">LANGKAH 1A — PILIH RANK SAAT INI</label>
+        <p style="font-size:12px; color:var(--muted-2); margin-top:4px;">Harga per bintang mengikuti tingkat kesulitan rank kamu sekarang.</p>
+        <div class="tier-select-grid" id="rankGrid" style="margin-top:14px;"></div>
+
+        <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px; margin-top:24px; display:block;">LANGKAH 1B — PILIH PAKET BINTANG</label>
+        <div class="star-grid" id="starGrid"></div>
+      </div>
+
+      <!-- SERVICE OPTIONS -->
+      <div class="card card-pad" style="margin-top:16px;">
+        <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px;">LANGKAH 2 — MODE PENGERJAAN</label>
+        <div class="mode-toggle" id="modeToggle"></div>
+
+        <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px; margin-top:22px; display:block;">LAYANAN TAMBAHAN (OPSIONAL)</label>
+        <div class="opt-grid" id="addonGrid"></div>
+      </div>
+
+      <!-- ACCOUNT DATA -->
+      <div class="card card-pad" style="margin-top:16px;">
+        <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px;">LANGKAH 3 — DATA AKUN GAME</label>
+        <div style="margin-top:14px;">
+          <div class="field"><label>User ID</label><input type="text" id="jkUserId" placeholder="Contoh: 123456789" oninput="updateSummary()"></div>
+          <div class="field"><label>Zone ID</label><input type="text" id="jkZoneId" placeholder="Contoh: 8888" oninput="updateSummary()"></div>
+          <div class="field" id="passField"><label>Kata Sandi Akun (khusus mode Full Joki)</label><input type="password" id="jkPass" placeholder="Password sementara" oninput="updateSummary()"></div>
+          <div class="field"><label>Catatan untuk Booster (opsional)</label><textarea id="jkNote" rows="2" placeholder="Contoh: mohon jangan pakai hero X, main jam malam saja"></textarea></div>
+        </div>
+        <div class="warn-box" id="passWarn">🔒 Password hanya digunakan sementara selama pengerjaan dan otomatis kami sarankan untuk diganti kembali oleh Anda setelah selesai.</div>
+      </div>
+
+      <!-- PAYMENT (identik dengan halaman top up) -->
+      <div class="card card-pad" style="margin-top:16px;">
+        <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px;">LANGKAH 4 — METODE PEMBAYARAN</label>
+        <div class="paytabs" id="payTabs"></div>
+        <div class="paymethods" id="payMethods"></div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="card card-pad" style="margin-top:16px;" id="page-joki-history">
+        <label style="font-family:var(--display); font-size:13px; color:var(--muted); letter-spacing:.5px;">RIWAYAT PESANAN JOKI</label>
+        <div style="overflow-x:auto; margin-top:12px;">
+          <table>
+            <thead><tr><th>ID Pesanan</th><th>Tanggal</th><th>Rank &amp; Paket</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="historyEmpty">Belum ada pesanan joki.</div>
+      </div>
+    </div>
+
+    <div class="sum-card card card-pad">
+      <b style="font-family:var(--display); font-size:16px;">Pesanan Kamu</b>
+      <p style="font-size:12px; color:var(--muted-2); margin-top:4px;">Ringkasan lengkap akan muncul setelah pembayaran selesai.</p>
+      <div class="sum-row" style="margin-top:10px;"><span>Rank &amp; Paket</span><b id="sumRoute">—</b></div>
+      <div id="sumTierBadge"></div>
+      <div class="sum-total"><span style="font-family:var(--display); font-size:14px; color:var(--muted);">TOTAL BAYAR</span><b id="sumTotal" class="counting">Rp 0</b></div>
+      <button class="btn btn-grad btn-block" style="margin-top:16px;" id="payBtn" onclick="startPayment()" disabled>Bayar &amp; Pesan Booster</button>
+      <p class="hint">Booster akan menghubungi Anda maks. 15 menit setelah pembayaran terkonfirmasi</p>
+    </div>
+    <!-- Hidden fields kept in DOM so existing summary logic still has a target; not shown to user during selection -->
+    <div style="display:none;"><span id="sumMode"></span><span id="sumAddon"></span><span id="sumAcc"></span><span id="sumPay"></span></div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap footgrid">
+    <div>
+      <div class="brand-text" style="font-size:16px;">Hexa<span>Vault</span> Diamond</div>
+      <div style="margin-top:6px;">© 2026 HexaVault Diamond. Proyek Tugas Akhir — simulasi layanan joki rank game.</div>
+    </div>
+    <div style="font-size:11.5px; color:var(--muted-2); max-width:420px;">Ikon rank pada halaman ini adalah desain lencana original buatan HexaVault, bukan aset resmi dari penerbit game.</div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <div class="modal-head"><h3>Masuk ke HexaVault</h3><button class="modal-close" onclick="closeModal('authOverlay')">✕</button></div>
+    <div class="modal-body">
+      <div class="tabs-auth">
+        <button class="active" id="tabLogin" onclick="switchAuth('login')">Masuk</button>
+        <button id="tabRegister" onclick="switchAuth('register')">Daftar</button>
+      </div>
+      <div id="loginForm">
+        <div class="formgroup"><label>Email</label><input type="email" id="loginEmail" placeholder="kamu@email.com"></div>
+        <div class="formgroup"><label>Kata Sandi</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+        <button class="btn btn-grad btn-block" onclick="doLogin()">Masuk</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="quickDemo()">Coba Demo Instan</button>
+      </div>
+      <div id="registerForm" style="display:none;">
+        <div class="formgroup"><label>Nama</label><input type="text" id="regName" placeholder="Nama kamu"></div>
+        <div class="formgroup"><label>Email</label><input type="email" id="regEmail" placeholder="kamu@email.com"></div>
+        <div class="formgroup"><label>Kata Sandi</label><input type="password" id="regPass" placeholder="Buat kata sandi"></div>
+        <button class="btn btn-grad btn-block" onclick="doRegister()">Daftar & Masuk</button>
+      </div>
+      <p class="hint">Data akun disimpan sementara pada sesi browser ini (mode demo, terpisah dari halaman Top Up).</p>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="overlay" id="payOverlay">
+  <div class="modal">
+    <div class="modal-head"><h3 id="payModalTitle">Pembayaran</h3><button class="modal-close" onclick="cancelPayment()">✕</button></div>
+    <div class="modal-body" id="payModalBody"></div>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div class="overlay" id="resultOverlay">
+  <div class="modal"><div class="modal-body" id="resultModalBody" style="text-align:center; padding-top:32px;"></div></div>
+</div>
+
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/joki.js"></script>
+</body>
+</html>

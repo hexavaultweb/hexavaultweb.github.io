@@ -1,0 +1,13 @@
+{
+  "name": "hexavault-diamond",
+  "version": "1.0.0",
+  "description": "Simulasi platform Top Up Diamond Mobile Legends + Joki Rank dengan backend Express & database JSON sederhana.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

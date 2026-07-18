@@ -1,0 +1,45 @@
+{
+  "_comment": "Satu-satunya sumber kebenaran untuk benefit tier membership. Dipakai oleh server.js (require langsung) dan oleh frontend lewat endpoint GET /api/tiers — supaya perhitungan diskon & poin di server SELALU sama dengan yang ditampilkan ke user, tidak ada duplikasi angka yang bisa beda sendiri-sendiri.",
+  "tiers": [
+    {
+      "name": "Bronze",
+      "min": 0,
+      "max": 499,
+      "discPct": 0,
+      "pointMult": 1,
+      "stampPerTx": 1,
+      "emoji": "🥉",
+      "desc": "Level pemula — cashback poin standar, akses semua metode pembayaran."
+    },
+    {
+      "name": "Silver",
+      "min": 500,
+      "max": 1499,
+      "discPct": 0.01,
+      "pointMult": 1.2,
+      "stampPerTx": 1,
+      "emoji": "🥈",
+      "desc": "Top up rutin — diskon 1% semua paket, cashback poin 1.2x."
+    },
+    {
+      "name": "Gold",
+      "min": 1500,
+      "max": 4999,
+      "discPct": 0.03,
+      "pointMult": 1.5,
+      "stampPerTx": 2,
+      "emoji": "🥇",
+      "desc": "Gamer aktif — diskon 3% semua paket, cashback poin 1.5x, stempel bertambah 2x lebih cepat tiap transaksi."
+    },
+    {
+      "name": "Platinum",
+      "min": 5000,
+      "max": null,
+      "discPct": 0.05,
+      "pointMult": 2,
+      "stampPerTx": 2,
+      "emoji": "💎",
+      "desc": "Top spender — diskon 5% semua paket, cashback poin 2x, stempel bertambah 2x lebih cepat tiap transaksi."
+    }
+  ]
+}

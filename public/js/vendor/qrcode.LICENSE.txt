@@ -1,0 +1,4 @@
+// qrcode.min.js — bundled locally from npm package 'qrcode' v1.5.3 (MIT License, by soldair/node-qrcode).
+// Vendored in-repo so the QR generator works fully offline / without relying
+// on any external CDN (a jsdelivr build path for this package version was
+// found to be unreliable — see README for details).

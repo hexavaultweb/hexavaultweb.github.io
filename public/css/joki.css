@@ -1,0 +1,65 @@
+/* ==========================================================================
+   JOKI.CSS — styles specific to joki-ml.html (Joki Rank page) only.
+   Shared tokens/components live in main.css — load that first.
+   ========================================================================== */
+
+.hero{position:relative; padding:56px 0 30px;}
+.eyebrow{display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12px; color:var(--green2); border:1px solid rgba(18,212,146,.35); background:rgba(18,212,146,.08); padding:6px 12px; border-radius:999px; margin-bottom:16px;}
+.dot-live{width:7px; height:7px; border-radius:50%; background:var(--green2); animation:pulse 1.8s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(18,212,146,.55);} 70%{box-shadow:0 0 0 8px rgba(18,212,146,0);} 100%{box-shadow:0 0 0 0 rgba(18,212,146,0);}}
+.hero h1{font-family:var(--display); font-size:42px; font-weight:700; line-height:1.08; max-width:720px;}
+.hero h1 .g{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.hero p{color:var(--muted); font-size:15px; max-width:560px; margin:16px 0 6px;}
+.trust-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;}
+.trust{background:var(--panel); border:1px solid var(--line); padding:8px 14px; border-radius:10px; font-size:12.5px; display:flex; gap:8px; align-items:center; transition:.2s;}
+.trust:hover{border-color:var(--blue2);}
+
+/* Tier badges */
+.tier-select-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:14px;}
+.tier-card{
+  background:var(--panel-2); border:1.5px solid var(--line); border-radius:14px; padding:12px 8px; text-align:center; cursor:pointer; transition:.15s;
+}
+.tier-card:hover{border-color:var(--blue2); transform:translateY(-2px);}
+.tier-card.active-from{border-color:var(--blue2); box-shadow:0 0 0 1px var(--blue2) inset; background:linear-gradient(160deg, rgba(30,139,255,.16), rgba(30,139,255,.04));}
+.tier-badge{width:56px; height:56px; margin:0 auto 8px;}
+.tier-card .tname{font-family:var(--display); font-weight:700; font-size:12.5px; line-height:1.2;}
+.tier-card .tprice{font-family:var(--mono); font-size:10px; color:var(--muted-2); margin-top:3px;}
+
+.star-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:14px;}
+.star-pkg{
+  background:var(--panel-2); border:1px solid var(--line); border-radius:14px; padding:16px 10px; text-align:center; position:relative;
+  cursor:pointer; transition:.18s;
+}
+.star-pkg:hover{border-color:var(--blue2); transform:translateY(-2px);}
+.star-pkg.selected{border-color:var(--green2); background:linear-gradient(160deg, rgba(30,139,255,.14), rgba(18,212,146,.14)); box-shadow:0 0 0 1px var(--green2) inset;}
+.star-pkg .badge{position:absolute; top:-9px; right:8px; background:var(--gold); color:#241800; font-size:9.5px; font-family:var(--display); font-weight:700; padding:3px 7px; border-radius:6px;}
+.star-pkg .scount{font-family:var(--display); font-weight:700; font-size:19px; color:var(--text); margin:6px 0 4px;}
+.star-pkg .sdisc{font-size:10.5px; color:var(--green2); min-height:14px;}
+.star-pkg .sprice{font-family:var(--mono); font-size:12.5px; color:var(--muted);}
+.star-pkg .sprice s{color:var(--muted-2); margin-right:4px; font-size:10.5px;}
+
+/* Mode & addon */
+.mode-toggle{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;}
+.mode{background:var(--panel-2); border:1.5px solid var(--line); border-radius:14px; padding:16px; cursor:pointer; transition:.15s;}
+.mode:hover{border-color:var(--blue2);}
+.mode.active{border-color:var(--green2); box-shadow:0 0 0 1px var(--green2) inset; background:linear-gradient(160deg, rgba(30,139,255,.1), rgba(18,212,146,.1));}
+.mode b{font-family:var(--display); font-size:15px; display:block; margin-bottom:4px;}
+.mode span{font-size:12px; color:var(--muted);}
+.mode .mmult{font-family:var(--mono); font-size:11px; color:var(--gold); margin-top:6px; display:block;}
+
+.opt-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;}
+.opt-card{background:var(--panel-2); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; gap:10px; align-items:flex-start; cursor:pointer; transition:.15s;}
+.opt-card:hover{border-color:var(--blue2);}
+.opt-card.checked{border-color:var(--green2); background:linear-gradient(160deg, rgba(30,139,255,.1), rgba(18,212,146,.1));}
+.opt-card input{margin-top:3px; accent-color:var(--green2);}
+.opt-card b{font-size:13.5px; display:block;} .opt-card span{font-size:11.5px; color:var(--muted-2);}
+.opt-card .oprice{font-family:var(--mono); font-size:11.5px; color:var(--gold); margin-top:4px; display:block;}
+
+@media(max-width:980px){
+  .tier-select-grid{grid-template-columns:repeat(3,1fr);}
+  .star-grid{grid-template-columns:repeat(3,1fr);}
+  .opt-grid{grid-template-columns:1fr;}
+  .mode-toggle{grid-template-columns:1fr;}
+  .hero h1{font-size:30px;}
+}
+@media(max-width:560px){ .tier-select-grid{grid-template-columns:repeat(2,1fr);} .star-grid{grid-template-columns:repeat(2,1fr);} }
